@@ -38,7 +38,7 @@ namespace WpfApp2
                 ReadUbl.Models.Invoice.Invoice invoice = invoiceBussines.ReadUbl(ublStr);
 
                 UblText.Text = ublStr;
-                string xsltStr = invoice.AdditionalDocumentReference.FirstOrDefault(x => x.DocumentType == "XSLT")?.Attachment?.EmbeddedDocumentBinaryObject?.Value ?? "";
+                string xsltStr = invoice.AdditionalDocumentReference.FirstOrDefault(x => x.DocumentType == "XSLT")?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
                 XsltText.Text = invoice.EmbededXslt;
                 string invoiceStr = invoiceBussines.XmlToString(invoice);
                 string html = string.Empty;

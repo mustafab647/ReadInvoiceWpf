@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace ReadUbl.Models
 {
-    public class EmbeddedDocumentBinaryObject
+    public struct EmbeddedDocumentBinaryObject
     {
         [XmlAttribute("characterSetCode")]
         public string CharacterSetCode { get; set; }
