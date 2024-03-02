@@ -24,7 +24,7 @@ namespace ReadUbl.Concrete
             return invoice;
         }
 
-        public string XmlToString(Invoice invoice)
+        public string InvoiceToXmlString(Invoice invoice)
         {
             string result = Helper.XmlHelper<Invoice>.Serialize(invoice);
             return result;
@@ -43,7 +43,7 @@ namespace ReadUbl.Concrete
                     XmlReader xsltReader = XmlReader.Create(new StreamReader(xsltMs));
 
                     xsltTransform.Load(xsltReader);
-                    string ubl = XmlToString(invoice);
+                    string ubl = InvoiceToXmlString(invoice);
                     XmlReader ublReader = XmlReader.Create(new StringReader(ubl));
                     MemoryStream htmlMs = new MemoryStream();
                     StringWriter sw = new StringWriter();
