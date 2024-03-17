@@ -12,6 +12,7 @@ namespace ReadUbl.Models.Invoice
     {
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
         public Price TaxAmount { get; set; }
-        public TaxSubtotal TaxSubtotal { get; set; }
+        [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
+        public List<TaxSubtotal> TaxSubtotal { get; set; }
     }
 }

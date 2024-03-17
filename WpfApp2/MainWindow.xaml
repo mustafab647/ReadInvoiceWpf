@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfApp2" xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="WpfApp2.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="560" Width="817">
     <Grid>
         <TabControl>
             <TabItem x:Name="Invoice" Header="Fatura">
@@ -41,19 +41,158 @@
                                         <TextBox HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" x:Name="XsltText" Grid.Row="2" Grid.Column="0" />
                                     </Grid>
                                     <GridSplitter Grid.Row="0" Grid.Column="1" Width="2" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="Black" />
-                                    <wv2:WebView2 x:Name="WebInvoice" Grid.Row="0" Grid.Column="2" />
+
+                                    <Grid Grid.Row="0" Grid.Column="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Width="85" Height="20" Name="ReView" Content="Görüntü Yenile" Click="RefreshView" ></Button>
+                                        </StackPanel>
+                                        <wv2:WebView2 x:Name="WebInvoice" Grid.Row="0" Grid.Column="2" />
+                                    </Grid>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="Detay">
-                                <Grid Background="#FFE5E5E5"/>
-                            </TabItem>
-                            <TabItem Header="Invoice">
+                            <TabItem Header="Detay" Height="20" VerticalAlignment="Top">
                                 <Grid Background="#FFE5E5E5">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="39*"/>
-                                        <ColumnDefinition Width="755*"/>
+                                        <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <WrapPanel  />
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="250" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Column="0" Grid.Row="0">
+                                        <Grid >
+                                            <Grid.ColumnDefinitions >
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions >
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <StackPanel Grid.Column="0" Grid.Row="0" >
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions >
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Supplier" />
+                                                    <TextBlock Grid.Row="1" Grid.Column="0" Width="200" Text="Name" Name="SupplierLbl" />
+                                                    <TextBox Grid.Row="1" Grid.Column="1" Text="" Name="SupplierTxt" />
+                                                    <TextBlock Grid.Row="2" Grid.Column="0" Width="200" Text="Address" Name="SupplierAddrLbl" />
+                                                    <TextBox Grid.Row="2" Grid.Column="1" Text="" Name="SupplierAddrTxt" />
+                                                    <TextBlock Grid.Row="3" Grid.Column="0" Width="200" Text="Town" Name="SupplierTownLbl" />
+                                                    <TextBox Grid.Row="3" Grid.Column="1" Text="" Name="SupplierTownTxt" />
+                                                    <TextBlock Grid.Row="4" Grid.Column="0" Width="200" Text="City" Name="SupplierCityLbl" />
+                                                    <TextBox Grid.Row="4" Grid.Column="1" Text="" Name="SupplierCityTxt" />
+                                                    <TextBlock Grid.Row="5" Grid.Column="0" Width="200" Text="Phone" Name="SupplierPhoneLbl" />
+                                                    <TextBox Grid.Row="5" Grid.Column="1" Text="" Name="SupplierPhoneTxt" />
+                                                    <TextBlock Grid.Row="6" Grid.Column="0" Width="200" Text="Tax Office" Name="SupplierTaxOfficeLbl" />
+                                                    <TextBox Grid.Row="6" Grid.Column="1" Text="" Name="SupplierTaxOfficeTxt" />
+                                                    <TextBlock Grid.Row="7" Grid.Column="0" Width="200" Text="Tax Id" Name="SupplierTaxIdLbl" />
+                                                    <TextBox Grid.Row="7" Grid.Column="1" Text="" Name="SupplierTaxIdTxt" />
+                                                </Grid>
+                                            </StackPanel>
+                                            <GridSplitter Width="2" Grid.Column="1" Grid.Row="0" VerticalAlignment="Stretch" Background="Black" />
+                                            <StackPanel Grid.Column="2" Grid.Row="0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions >
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Customer" />
+                                                    <TextBlock Grid.Row="1" Grid.Column="0" Width="200" Text="Name" Name="CustomerLbl" />
+                                                    <TextBox Grid.Row="1" Grid.Column="1" Text="" Name="CustomerTxt" />
+                                                    <TextBlock Grid.Row="2" Grid.Column="0" Width="200" Text="Address" Name="CustomerAddrLbl" />
+                                                    <TextBox Grid.Row="2" Grid.Column="1" Text="" Name="CustomerAddrTxt" />
+                                                    <TextBlock Grid.Row="3" Grid.Column="0" Width="200" Text="Town" Name="CustomerTownLbl" />
+                                                    <TextBox Grid.Row="3" Grid.Column="1" Text="" Name="CustomerTownTxt" />
+                                                    <TextBlock Grid.Row="4" Grid.Column="0" Width="200" Text="City" Name="CustomerCityLbl" />
+                                                    <TextBox Grid.Row="4" Grid.Column="1" Text="" Name="CustomerCityTxt" />
+                                                    <TextBlock Grid.Row="5" Grid.Column="0" Width="200" Text="Phone" Name="CustomerPhoneLbl" />
+                                                    <TextBox Grid.Row="5" Grid.Column="1" Text="" Name="CustomerPhoneTxt" />
+                                                    <TextBlock Grid.Row="6" Grid.Column="0" Width="200" Text="Tax Office" Name="CustomerTaxOfficeLbl" />
+                                                    <TextBox Grid.Row="6" Grid.Column="1" Text="" Name="CustomerTaxOfficeTxt" />
+                                                    <TextBlock Grid.Row="7" Grid.Column="0" Width="200" Text="Tax Id" Name="CustomerTaxIdLbl" />
+                                                    <TextBox Grid.Row="7" Grid.Column="1" Text="" Name="CustomerTaxIdTxt" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                    <GridSplitter Grid.Column="0" Grid.Row="1" Height="2" HorizontalAlignment="Center" Width="auto" Background="Black" />
+                                    <Grid Grid.Column="0" Grid.Row="2" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <DataGrid Name="invoiceLine" Grid.Column="0" Grid.Row="0" AutoGeneratedColumns="generateData" Margin="0,-34,0,0" >
+                                        </DataGrid>
+                                    </Grid>
+                                    <GridSplitter Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" Background="Black" />
+                                    <Grid Grid.Column="0" Grid.Row="4">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <StackPanel Grid.Row="0" Grid.Column="0" Width="750"></StackPanel>
+                                                <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="403">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock Grid.Row="0" Grid.Column="0" Name="GrandTotalExclVatLbl" Text="Grand Total" />
+                                                        <TextBox Grid.Row="0" Grid.Column="1" Name="GrandTotalExclVatTxt" TextAlignment="Right" Text=""/>
+                                                        <TextBlock Grid.Row="1" Grid.Column="0" Name="DiscExclVatLbl" Text="Discount Total" />
+                                                        <TextBox Grid.Row="1" Grid.Column="1" Name="DiscExclVatTxt" TextAlignment="Right" Text=""/>
+                                                        <TextBlock Grid.Row="2" Grid.Column="0" Name="VatTotal" Text="Vat Total" />
+                                                        <TextBox Grid.Row="2" Grid.Column="1" Name="VatTxt" TextAlignment="Right" Text=""/>
+                                                        <TextBlock Grid.Row="3" Grid.Column="0" Name="TotalLbl" Text="Total" />
+                                                        <TextBox Grid.Row="3" Grid.Column="1" Name="TotalText" TextAlignment="Right" Text="" />
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
                                 </Grid>
                             </TabItem>
                         </TabControl>
