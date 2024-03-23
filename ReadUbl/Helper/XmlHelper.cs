@@ -11,7 +11,7 @@ namespace ReadUbl.Helper
 {
     public static class XmlHelper<T>
     {
-        public static string Serialize(Invoice invoice)
+        public static string Serialize(T invoice)
         {
             string result = "";
             XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -22,6 +22,19 @@ namespace ReadUbl.Helper
             }
             return result;
         }
+
+        public static Type AsXmlType(string xmlStr)
+        {
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xmlStr);
+                return Helper.GetModelType(xmlDoc);
+            }
+            catch { }
+            return null;
+        }
+
         public static T DeSerialize(string xmlStr)
         {
             T result;

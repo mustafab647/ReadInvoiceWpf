@@ -25,6 +25,7 @@ namespace WpfApp2
     {
         public readonly DependencyProperty htmlProperty = DependencyProperty.RegisterAttached("Html", typeof(string), typeof(MainWindow), new FrameworkPropertyMetadata(null));
         private ReadUbl.Models.Invoice.Invoice invoice { get; set; }
+        private ReadUbl.Models.Dispatch.DespatchAdvice despatchAdvice { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -41,19 +42,38 @@ namespace WpfApp2
                 FilePath.Text = openFileDialog.FileName;
                 string ublStr = System.IO.File.ReadAllText(openFileDialog.FileName);
                 ReadUbl.Concrete.InvoiceBussines invoiceBussines = new ReadUbl.Concrete.InvoiceBussines();
-
-                invoice = invoiceBussines.ReadUbl(ublStr);
+                Type xmlType = invoiceBussines.GetXmlModelType(ublStr);
+                if (xmlType == typeof(ReadUbl.Models.Invoice.Invoice))
+                {
+                    invoice = invoiceBussines.ReadUblForInv(ublStr);
+                    despatchAdvice = null;
+                }
+                else if (xmlType == typeof(ReadUbl.Models.Dispatch.DespatchAdvice))
+                {
+                    despatchAdvice = invoiceBussines.ReadUblForDespatch(ublStr);
+                    invoice = null;
+                }
 
                 UblText.Text = ublStr;
-                XsltText.Text = invoice.EmbededXslt;
+                if (invoice != null)
+                    XsltText.Text = invoice.EmbededXslt;
+                else if (despatchAdvice != null)
+                    XsltText.Text = despatchAdvice.EmbededXslt;
                 string invoiceStr = invoiceBussines.InvoiceToXmlString(invoice);
                 string html = string.Empty;
-                var invoiceModel = ReadInvoiceWpf.Helper.ConvertInvoice.ToInvoiceModel(invoice);
-                setDetail(invoiceModel);
+                if (invoice != null)
+                {
+                    var invoiceModel = ReadInvoiceWpf.Helper.ConvertInvoice.ToInvoiceModel(invoice);
+                    setDetail(invoiceModel);
+                }
+                else if(despatchAdvice != null)
+                {
+                    setDetail(new ReadInvoiceWpf.Model.Despatch.DespatchModel());
+                }
                 //editControl.Text = ublStr;
                 try
                 {
-                    html = invoiceBussines.InvoiceToHtml(invoice);
+                    html = invoiceBussines.ToHtml(ublStr, XsltText.Text);
                 }
                 catch { }
                 setWebViewHtml(html);
@@ -63,12 +83,12 @@ namespace WpfApp2
         internal void RefreshView(object sender, RoutedEventArgs e)
         {
             ReadUbl.Concrete.InvoiceBussines invoiceBussines = new ReadUbl.Concrete.InvoiceBussines();
-            ReadUbl.Models.Invoice.Invoice invoice = invoiceBussines.ReadUbl(UblText.Text);
-            invoice.EmbededXslt = XsltText.Text;
+            //ReadUbl.Models.Invoice.Invoice invoice = invoiceBussines.ReadUblForInv(UblText.Text);
+            //invoice.EmbededXslt = XsltText.Text;
             string html = string.Empty;
             try
             {
-                html = invoiceBussines.InvoiceToHtml(invoice);
+                html = invoiceBussines.ToHtml(UblText.Text, XsltText.Text);
             }
             catch { }
             setWebViewHtml(html);
@@ -79,6 +99,13 @@ namespace WpfApp2
             setCustomerInf(invoice);
             setDataGrid(invoice.Lines);
             setSubTotal(invoice);
+        }
+        private void setDetail(ReadInvoiceWpf.Model.Despatch.DespatchModel despatch)
+        {
+            //setSupplierInf(invoice);
+            //setCustomerInf(invoice);
+            //setDataGrid(invoice.Lines);
+            //setSubTotal(invoice);
         }
         private void setSubTotal(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
