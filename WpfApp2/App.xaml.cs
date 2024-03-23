@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace WpfApp2
@@ -9,6 +10,7 @@ namespace WpfApp2
     /// </summary>
     public partial class App : Application
     {
+        
     }
 
 }

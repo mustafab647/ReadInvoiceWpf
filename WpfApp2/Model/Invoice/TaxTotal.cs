@@ -13,7 +13,7 @@ namespace ReadInvoiceWpf.Model.Invoice
 
         public override string ToString()
         {
-            return $"{TaxAmount.Amount} {TaxAmount.CurrencyCode}";
+            return $"{TaxAmount.Amount} {TaxAmount.CurrencyCode.Trim()}".PadLeft(40, ' ');
         }
     }
 }

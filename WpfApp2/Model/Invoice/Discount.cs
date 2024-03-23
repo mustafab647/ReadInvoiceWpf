@@ -17,7 +17,7 @@ namespace ReadInvoiceWpf.Model.Invoice
         {
             if (Amount is null)
                 return "";
-            return $"{Amount.Amount} {Amount.CurrencyCode}";
+            return $"{Amount.Amount} {Amount.CurrencyCode}".PadLeft(40,' ');
         }
     }
 }

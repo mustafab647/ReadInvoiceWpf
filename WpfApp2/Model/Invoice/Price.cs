@@ -14,7 +14,7 @@ namespace ReadInvoiceWpf.Model.Invoice
 
         public override string ToString()
         {
-            return $"{Amount.ToString("N2")} {CurrencyCode}";
+            return $"{Amount.ToString("N2")} {CurrencyCode.Trim()}".PadLeft(40,' ');
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using ReadInvoiceWpf.Forms;
 using ReadUbl.Concrete;
 using ReadUbl.Helper;
 using System.Reflection;
@@ -11,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -22,6 +24,7 @@ namespace WpfApp2
     public partial class MainWindow : Window
     {
         public readonly DependencyProperty htmlProperty = DependencyProperty.RegisterAttached("Html", typeof(string), typeof(MainWindow), new FrameworkPropertyMetadata(null));
+        private ReadUbl.Models.Invoice.Invoice invoice { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -39,7 +42,7 @@ namespace WpfApp2
                 string ublStr = System.IO.File.ReadAllText(openFileDialog.FileName);
                 ReadUbl.Concrete.InvoiceBussines invoiceBussines = new ReadUbl.Concrete.InvoiceBussines();
 
-                ReadUbl.Models.Invoice.Invoice invoice = invoiceBussines.ReadUbl(ublStr);
+                invoice = invoiceBussines.ReadUbl(ublStr);
 
                 UblText.Text = ublStr;
                 XsltText.Text = invoice.EmbededXslt;
@@ -70,7 +73,6 @@ namespace WpfApp2
             catch { }
             setWebViewHtml(html);
         }
-
         private void setDetail(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
             setSupplierInf(invoice);
@@ -152,6 +154,15 @@ namespace WpfApp2
         private void ReView_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void VatInf_Click(object sender, RoutedEventArgs eventArgs)
+        {
+            var selectedItem = (ReadInvoiceWpf.Model.Invoice.InvoiceLine)invoiceLine.SelectedItem;
+            SecondForm secondForm = new SecondForm();
+            VatInf_Page vatInf_Page = new VatInf_Page(selectedItem.TaxTotal);
+            secondForm.Content = vatInf_Page;
+            secondForm.ShowDialog();
         }
     }
 }
