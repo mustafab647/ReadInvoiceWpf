@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReadUbl.RIWInterface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace ReadUbl.Models.Invoice
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2", IsNullable = false)]
 
-    public class Invoice
+    public class Invoice : RIW_UblItem
     {
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces xmlns = new XmlSerializerNamespaces();
@@ -44,7 +45,7 @@ namespace ReadUbl.Models.Invoice
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
         public string InvoiceTypeCode { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
-        public string Note { get; set; }
+        public List<string> Note { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
         public DocumentCurrencyCode DocumentCurrencyCode { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]

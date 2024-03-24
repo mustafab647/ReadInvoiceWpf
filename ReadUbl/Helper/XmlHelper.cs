@@ -1,7 +1,9 @@
 ﻿using ReadUbl.Models.Invoice;
+using ReadUbl.RIWInterface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -9,12 +11,12 @@ using System.Xml.Serialization;
 
 namespace ReadUbl.Helper
 {
-    public static class XmlHelper<T>
+    public static class XmlHelper<RIW_UblItem>
     {
-        public static string Serialize(T invoice)
+        public static string Serialize(RIW_UblItem invoice)
         {
             string result = "";
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            XmlSerializer serializer = new XmlSerializer(typeof(RIW_UblItem));
             using (StringWriter sw = new StringWriter())
             {
                 serializer.Serialize(sw, invoice);
@@ -35,20 +37,21 @@ namespace ReadUbl.Helper
             return null;
         }
 
-        public static T DeSerialize(string xmlStr)
+        public static RIW_UblItem DeSerialize(string xmlStr)
         {
-            T result;
+            RIW_UblItem result;
             try
             {
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(xmlStr);
+                Type xmlType = Helper.GetModelType(xmlDoc);
                 XmlReader xmlReader = new XmlNodeReader(xmlDoc);
                 xmlStr = xmlStr.Trim();
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(xmlStr);
                 using (MemoryStream ms = new MemoryStream(buffer))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-                    result = (T)serializer.Deserialize(xmlReader);
+                    XmlSerializer serializer = new XmlSerializer(xmlType);
+                    result = (RIW_UblItem)serializer.Deserialize(xmlReader);
                 }
                 return result;
             }

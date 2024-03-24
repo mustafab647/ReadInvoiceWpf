@@ -1,5 +1,5 @@
-﻿using ReadUbl.Models.Invoice;
-using ReadUbl.RIWInterface;
+﻿using ReadUbl.Models;
+using ReadUbl.Models.Invoice;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,19 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace ReadUbl.Models.Dispatch
+namespace ReadUbl.RIWInterface
 {
-    [XmlRootAttribute("DespatchAdvice", Namespace = "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2", IsNullable = false)]
-    public class DespatchAdvice : RIW_UblItem
+    public interface RIW_UblItem
     {
-        [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces xmlns = new XmlSerializerNamespaces();
-        public DespatchAdvice()
-        {
-            xmlns.Add("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
-            xmlns.Add("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
-            xmlns.Add("", "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2");
-        }
         [XmlIgnore]
         public string EmbededXslt { get; set; }
 
@@ -47,19 +38,5 @@ namespace ReadUbl.Models.Dispatch
         public List<AdditionalDocumentReference> AdditionalDocumentReference { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
         public Signature Signature { get; set; }
-
-        [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
-        public string DespatchAdviceTypeCode { get; set; }
-        [XmlElement("DespatchSupplierParty", Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
-        public AccountingParty AccountingSupplierParty { get; set; }
-        [XmlElement("DeliveryCustomerParty", Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
-        public AccountingParty AccountingCustomerParty { get; set; }
-        [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
-        public Shipment Shipment { get; set; }
-        [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
-        public LegalMonetaryTotal LegalMonetaryTotal { get; set; }
-
-        [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
-        public List<Line> DespatchLine { get; set; }
     }
 }

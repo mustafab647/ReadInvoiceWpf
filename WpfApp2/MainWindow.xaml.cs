@@ -2,6 +2,7 @@
 using ReadInvoiceWpf.Forms;
 using ReadUbl.Concrete;
 using ReadUbl.Helper;
+using ReadUbl.Models;
 using System.Reflection;
 using System.Text;
 using System.Windows;
@@ -24,8 +25,7 @@ namespace WpfApp2
     public partial class MainWindow : Window
     {
         public readonly DependencyProperty htmlProperty = DependencyProperty.RegisterAttached("Html", typeof(string), typeof(MainWindow), new FrameworkPropertyMetadata(null));
-        private ReadUbl.Models.Invoice.Invoice invoice { get; set; }
-        private ReadUbl.Models.Dispatch.DespatchAdvice despatchAdvice { get; set; }
+        private ReadUbl.RIWInterface.RIW_UblItem ublObj { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -39,36 +39,32 @@ namespace WpfApp2
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog(this) ?? false)
             {
+                allReset();
                 FilePath.Text = openFileDialog.FileName;
                 string ublStr = System.IO.File.ReadAllText(openFileDialog.FileName);
                 ReadUbl.Concrete.InvoiceBussines invoiceBussines = new ReadUbl.Concrete.InvoiceBussines();
                 Type xmlType = invoiceBussines.GetXmlModelType(ublStr);
                 if (xmlType == typeof(ReadUbl.Models.Invoice.Invoice))
                 {
-                    invoice = invoiceBussines.ReadUblForInv(ublStr);
-                    despatchAdvice = null;
+                    ublObj = invoiceBussines.ReadUblForInv(ublStr);
                 }
                 else if (xmlType == typeof(ReadUbl.Models.Dispatch.DespatchAdvice))
                 {
-                    despatchAdvice = invoiceBussines.ReadUblForDespatch(ublStr);
-                    invoice = null;
+                    ublObj = invoiceBussines.ReadUblForDespatch(ublStr);
                 }
 
                 UblText.Text = ublStr;
-                if (invoice != null)
-                    XsltText.Text = invoice.EmbededXslt;
-                else if (despatchAdvice != null)
-                    XsltText.Text = despatchAdvice.EmbededXslt;
-                string invoiceStr = invoiceBussines.InvoiceToXmlString(invoice);
+                XsltText.Text = ublObj.EmbededXslt;
                 string html = string.Empty;
-                if (invoice != null)
+                if (ublObj is ReadUbl.Models.Invoice.Invoice)
                 {
-                    var invoiceModel = ReadInvoiceWpf.Helper.ConvertInvoice.ToInvoiceModel(invoice);
+                    var invoiceModel = ReadInvoiceWpf.Helper.ConvertInvoice.ToInvoiceModel((ReadUbl.Models.Invoice.Invoice)ublObj);
                     setDetail(invoiceModel);
                 }
-                else if(despatchAdvice != null)
+                else if(ublObj is ReadUbl.Models.Dispatch.DespatchAdvice)
                 {
-                    setDetail(new ReadInvoiceWpf.Model.Despatch.DespatchModel());
+                    var dispatchModel = ReadInvoiceWpf.Helper.ConvertDespatch.ToDespatchModel((ReadUbl.Models.Dispatch.DespatchAdvice)ublObj);
+                    setDetail(dispatchModel);
                 }
                 //editControl.Text = ublStr;
                 try
@@ -95,6 +91,7 @@ namespace WpfApp2
         }
         private void setDetail(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
+            VatInf.Visibility = Visibility.Visible;
             setSupplierInf(invoice);
             setCustomerInf(invoice);
             setDataGrid(invoice.Lines);
@@ -102,9 +99,10 @@ namespace WpfApp2
         }
         private void setDetail(ReadInvoiceWpf.Model.Despatch.DespatchModel despatch)
         {
-            //setSupplierInf(invoice);
-            //setCustomerInf(invoice);
-            //setDataGrid(invoice.Lines);
+            VatInf.Visibility = Visibility.Hidden;
+            setSupplierInf(despatch);
+            setCustomerInf(despatch);
+            setDataGrid(despatch.Lines);
             //setSubTotal(invoice);
         }
         private void setSubTotal(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
@@ -125,6 +123,16 @@ namespace WpfApp2
             SupplierPhoneTxt.Text = invoice.Supplier.Phone;
         }
 
+        private void setSupplierInf(ReadInvoiceWpf.Model.Despatch.DespatchModel despatch)
+        {
+            SupplierTxt.Text = despatch.Supplier.Name;
+            SupplierAddrTxt.Text = $"{despatch.Supplier.Address.StreetName} {despatch.Supplier.Address.BuildingNumber}";
+            SupplierTownTxt.Text = despatch.Supplier.Address.Town;
+            SupplierCityTxt.Text = despatch.Supplier.Address.City;
+            SupplierTaxIdTxt.Text = despatch.Supplier.TaxId.ToString();
+            SupplierTaxOfficeTxt.Text = despatch.Supplier.TaxOffice;
+            SupplierPhoneTxt.Text = despatch.Supplier.Phone;
+        }
         private void setCustomerInf(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
             CustomerTxt.Text = invoice.Customer.Name;
@@ -135,9 +143,23 @@ namespace WpfApp2
             CustomerTaxOfficeTxt.Text = invoice.Customer.TaxOffice;
             CustomerPhoneTxt.Text = invoice.Customer.Phone;
         }
+        private void setCustomerInf(ReadInvoiceWpf.Model.Despatch.DespatchModel despatch)
+        {
+            CustomerTxt.Text = despatch.Customer.Name;
+            CustomerAddrTxt.Text = $"{despatch.Customer.Address.StreetName} {despatch.Customer.Address.BuildingNumber}";
+            CustomerTownTxt.Text = despatch.Customer.Address.Town;
+            CustomerCityTxt.Text = despatch.Customer.Address.City;
+            CustomerTaxIdTxt.Text = despatch.Customer.TaxId.ToString();
+            CustomerTaxOfficeTxt.Text = despatch.Customer.TaxOffice;
+            CustomerPhoneTxt.Text = despatch.Customer.Phone;
+        }
         private void setDataGrid(List<ReadInvoiceWpf.Model.Invoice.InvoiceLine> invoiceLines)
         {
             invoiceLine.ItemsSource = invoiceLines;
+        }
+        private void setDataGrid(List<ReadInvoiceWpf.Model.Despatch.DespatchLine> despatchLines)
+        {
+            invoiceLine.ItemsSource = despatchLines;
         }
         private void generateData(object sender, EventArgs e)
         {
@@ -190,6 +212,40 @@ namespace WpfApp2
             VatInf_Page vatInf_Page = new VatInf_Page(selectedItem.TaxTotal);
             secondForm.Content = vatInf_Page;
             secondForm.ShowDialog();
+        }
+
+        private void resetSupplierInf()
+        {
+            SupplierTxt.Text = "";
+            SupplierAddrTxt.Text = "";
+            SupplierTownTxt.Text = "";
+            SupplierCityTxt.Text = "";
+            SupplierTaxIdTxt.Text = "";
+            SupplierTaxOfficeTxt.Text = "";
+            SupplierPhoneTxt.Text = "";
+        }
+        private void resetCustomerInf()
+        {
+            CustomerTxt.Text = "";
+            CustomerAddrTxt.Text = "";
+            CustomerTownTxt.Text = "";
+            CustomerCityTxt.Text = "";
+            CustomerTaxIdTxt.Text = "";
+            CustomerTaxOfficeTxt.Text = "";
+            CustomerPhoneTxt.Text = "";
+        }
+        private void resetSubTotal()
+        {
+            GrandTotalExclVatTxt.Text = "";
+            DiscExclVatTxt.Text = "";
+            VatTxt.Text = "";
+            TotalText.Text = "";
+        }
+        private void allReset()
+        {
+            resetSupplierInf();
+            resetCustomerInf();
+            resetSubTotal();
         }
     }
 }

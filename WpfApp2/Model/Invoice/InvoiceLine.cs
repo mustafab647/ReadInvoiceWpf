@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ReadInvoiceWpf.Model.Invoice
 {
-    public class InvoiceLine
+    public class InvoiceLine : IItemLine
     {
         public int LineNo { get; set; }
         public string SellerItemIdentification { get; set; }

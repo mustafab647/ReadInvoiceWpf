@@ -12,6 +12,7 @@ namespace ReadInvoiceWpf.Model.Invoice
         public string No { get; set; }
         public DateTime DateTime { get; set; }
         public string ProfileId { get; set; }
+        public List<string> Note { get; set; }
         public string Type { get; set; }
         public TaxPayer Supplier { get; set; }
         public TaxPayer Customer { get; set; }
