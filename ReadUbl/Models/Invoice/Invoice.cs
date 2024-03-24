@@ -9,18 +9,21 @@ using System.Xml.Serialization;
 
 namespace ReadUbl.Models.Invoice
 {
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2", IsNullable = false)]
+    [XmlType(AnonymousType = true, Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
+    [XmlRoot(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2", IsNullable = false)]
 
     public class Invoice : RIW_UblItem
     {
+        [XmlAttribute]
+        public string xmlns { get; set; }
+
         [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces xmlns = new XmlSerializerNamespaces();
+        public XmlSerializerNamespaces _xmlns = new XmlSerializerNamespaces();
         public Invoice()
         {
-            xmlns.Add("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
-            xmlns.Add("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
-            xmlns.Add("", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
+            _xmlns.Add("cac", "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2");
+            _xmlns.Add("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");
+            _xmlns.Add("", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2");
         }
 
         [XmlIgnore]

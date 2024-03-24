@@ -17,16 +17,19 @@ namespace ReadUbl.Helper
         {
             var assemblies = Assembly.GetCallingAssembly();
 
+            string nameSpace = xmlDoc.DocumentElement.Name;
+            if (xmlDoc.DocumentElement.Name.Contains(":"))
+                nameSpace = xmlDoc.DocumentElement.Name.Split(":")[1];
             var classes = assemblies.DefinedTypes.Where(x => x.CustomAttributes.Any(c => c.AttributeType == typeof(XmlRootAttribute)));
             foreach(var _class in classes)
             {
                 var attr = _class.GetCustomAttribute(typeof(XmlRootAttribute));
-                if (((XmlRootAttribute)attr).ElementName == xmlDoc.DocumentElement.Name)
+                if (((XmlRootAttribute)attr).ElementName == nameSpace)
                 {
                     return _class;
                 }
             }
-            return assemblies.DefinedTypes.FirstOrDefault(x => x.Name == xmlDoc.DocumentElement.Name);
+            return assemblies.DefinedTypes.FirstOrDefault(x => x.Name == nameSpace);
         }
     }
 }

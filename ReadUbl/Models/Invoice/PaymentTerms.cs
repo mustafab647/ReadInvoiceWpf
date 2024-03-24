@@ -10,6 +10,6 @@ namespace ReadUbl.Models.Invoice
     public class PaymentTerms
     {
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
-        public string Note { get; set; }
+        public List<string> Note { get; set; }
     }
 }

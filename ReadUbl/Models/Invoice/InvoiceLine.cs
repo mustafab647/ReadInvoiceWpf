@@ -13,7 +13,7 @@ namespace ReadUbl.Models.Invoice
         [XmlElement("ID",Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
         public ID ID { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
-        public string Note { get; set; }
+        public List<string> Note { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
         public Quantity InvoicedQuantity { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]

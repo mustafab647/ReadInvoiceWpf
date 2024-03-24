@@ -25,6 +25,7 @@ namespace ReadInvoiceWpf.Helper
             model.Customer = getTaxPayer(despatch.AccountingCustomerParty);
             model.DispatchAddress = getAddress(despatch.Shipment?.Delivery?.DeliveryAddress);
             model.Lines = getLines(despatch.DespatchLine);
+            model.Note = despatch.Note;
             return model;
         }
         private static List<AdditionalDocumentReference> getAdditionalDocumentReferences(ReadUbl.Models.Dispatch.DespatchAdvice despatchAdvice)

@@ -1,4 +1,5 @@
 ﻿using ReadUbl.Models.Dispatch;
+using ReadUbl.Models.Envelope;
 using ReadUbl.Models.Invoice;
 using ReadUbl.RIWInterface;
 using System;
@@ -20,7 +21,7 @@ namespace ReadUbl.Concrete
             if (modelType != typeof(Invoice))
                 throw new Exception($"Lütfen {modelType.Name} modeli ile çağırınız.");
             Invoice invoice = Helper.XmlHelper<Invoice>.DeSerialize(xmlStr);
-            
+
             string base64Xslt = invoice.AdditionalDocumentReference?.FirstOrDefault(x => x.DocumentType != null && x.DocumentType.Equals("XSLT"))?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
             if (string.IsNullOrEmpty(base64Xslt))
                 base64Xslt = invoice.AdditionalDocumentReference?.FirstOrDefault(x => x.Attachment.EmbeddedDocumentBinaryObject.FileName.EndsWith("xslt"))?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
@@ -42,6 +43,22 @@ namespace ReadUbl.Concrete
             despatchAdvice.EmbededXslt = xslt;
 
             return despatchAdvice;
+        }
+        public Models.Envelope.StandardBusinessDocument GetEnvelope(string xmlStr)
+        {
+            Type modelType = Helper.XmlHelper<object>.AsXmlType(xmlStr);
+            XmlDocument xmlDoc = Helper.XmlHelper<object>.GetXmlDoc(xmlStr);
+            if (modelType != typeof(Models.Envelope.StandardBusinessDocument))
+                throw new Exception($"Lütfen {modelType.Name} modeli ile çağırınız.");
+            Models.Envelope.StandardBusinessDocument result = Helper.XmlHelper<Models.Envelope.StandardBusinessDocument>.DeSerialize(xmlStr);
+            XmlNodeList xmlNodeList = xmlDoc.GetElementsByTagName("Invoice");
+            ElementList elements = result.Package.Elements.ElementList;
+            foreach (XmlNode xmlNode in xmlNodeList)
+            {
+                Invoice invoice = Helper.XmlHelper<Invoice>.DeSerialize(xmlNode.OuterXml);
+                elements.Invoice.Add(invoice);
+            }
+            return result;
         }
 
         public Type GetXmlModelType(string xmlStr)

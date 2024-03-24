@@ -33,6 +33,7 @@ namespace ReadInvoiceWpf.Helper
             invoice.TaxExclAmount = getPrice(model.LegalMonetaryTotal?.TaxExclusiveAmount);
             invoice.ChargeAmount = getPrice(model.LegalMonetaryTotal?.ChargeTotalAmount);
             invoice.TaxInclAmount = getPrice(model.LegalMonetaryTotal?.TaxInclusiveAmount);
+            invoice.Note = model.Note;
             
             return invoice;
         }
@@ -46,7 +47,7 @@ namespace ReadInvoiceWpf.Helper
             foreach (var invoiceLine in invoiceLines)
             {
                 InvoiceLine _invoiceLine = new InvoiceLine();
-                _invoiceLine.Note = invoiceLine.Note;
+                _invoiceLine.Note = string.Join(",", invoiceLine.Note);
                 _invoiceLine.LineNo = Convert.ToInt32(invoiceLine.ID?.Value);
                 _invoiceLine.Description = invoiceLine.Item?.Description ?? "";
                 _invoiceLine.Name = invoiceLine.Item?.Name ?? "";

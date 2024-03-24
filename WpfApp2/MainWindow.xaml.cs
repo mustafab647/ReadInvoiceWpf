@@ -52,6 +52,10 @@ namespace WpfApp2
                 {
                     ublObj = invoiceBussines.ReadUblForDespatch(ublStr);
                 }
+                else if(xmlType == typeof(ReadUbl.Models.Envelope.StandardBusinessDocument))
+                {
+                    var envelope = invoiceBussines.GetEnvelope(ublStr);
+                }
 
                 UblText.Text = ublStr;
                 XsltText.Text = ublObj.EmbededXslt;
@@ -91,19 +95,22 @@ namespace WpfApp2
         }
         private void setDetail(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
+            dataGridMenu.Visibility = Visibility.Visible;
             VatInf.Visibility = Visibility.Visible;
             setSupplierInf(invoice);
             setCustomerInf(invoice);
             setDataGrid(invoice.Lines);
             setSubTotal(invoice);
+            setNotes(invoice.Note);
         }
         private void setDetail(ReadInvoiceWpf.Model.Despatch.DespatchModel despatch)
         {
             VatInf.Visibility = Visibility.Hidden;
+            dataGridMenu.Visibility = Visibility.Hidden;
             setSupplierInf(despatch);
             setCustomerInf(despatch);
             setDataGrid(despatch.Lines);
-            //setSubTotal(invoice);
+            setNotes(despatch.Note);
         }
         private void setSubTotal(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
@@ -161,6 +168,12 @@ namespace WpfApp2
         {
             invoiceLine.ItemsSource = despatchLines;
         }
+        private void setNotes(List<string> notes)
+        {
+            if (notes is null)
+                return;
+            NotesTxt.Text = string.Join("\r\n", notes);
+        }
         private void generateData(object sender, EventArgs e)
         {
             System.Windows.Controls.DataGrid dataGrid = (System.Windows.Controls.DataGrid)sender;
@@ -213,7 +226,10 @@ namespace WpfApp2
             secondForm.Content = vatInf_Page;
             secondForm.ShowDialog();
         }
-
+        private void resetDataGrid()
+        {
+            invoiceLine.ItemsSource = null;
+        }
         private void resetSupplierInf()
         {
             SupplierTxt.Text = "";
@@ -241,10 +257,15 @@ namespace WpfApp2
             VatTxt.Text = "";
             TotalText.Text = "";
         }
+        private void resetNotes()
+        {
+            NotesTxt.Text = string.Empty;
+        }
         private void allReset()
         {
             resetSupplierInf();
             resetCustomerInf();
+            resetDataGrid();
             resetSubTotal();
         }
     }

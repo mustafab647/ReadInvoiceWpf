@@ -29,12 +29,18 @@ namespace ReadUbl.Helper
         {
             try
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xmlStr);
+                XmlDocument xmlDoc = GetXmlDoc(xmlStr);
                 return Helper.GetModelType(xmlDoc);
             }
             catch { }
             return null;
+        }
+
+        public static XmlDocument GetXmlDoc(string xmlStr)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlStr);
+            return xmlDoc;
         }
 
         public static RIW_UblItem DeSerialize(string xmlStr)
@@ -42,8 +48,7 @@ namespace ReadUbl.Helper
             RIW_UblItem result;
             try
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(xmlStr);
+                XmlDocument xmlDoc = GetXmlDoc(xmlStr);
                 Type xmlType = Helper.GetModelType(xmlDoc);
                 XmlReader xmlReader = new XmlNodeReader(xmlDoc);
                 xmlStr = xmlStr.Trim();
