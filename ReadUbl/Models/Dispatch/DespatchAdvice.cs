@@ -21,7 +21,18 @@ namespace ReadUbl.Models.Dispatch
             xmlns.Add("", "urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2");
         }
         [XmlIgnore]
-        public string EmbededXslt { get; set; }
+        public string EmbededXslt
+        {
+            get
+            {
+                string base64Xslt = AdditionalDocumentReference?.FirstOrDefault(x => x.DocumentType != null && x.DocumentType.Equals("XSLT"))?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
+                if (string.IsNullOrEmpty(base64Xslt))
+                    base64Xslt = AdditionalDocumentReference?.FirstOrDefault(x => x.Attachment.EmbeddedDocumentBinaryObject.FileName.EndsWith("xslt"))?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
+                byte[] bufferXslt = System.Convert.FromBase64String(base64Xslt);
+                string xslt = System.Text.Encoding.UTF8.GetString(bufferXslt);
+                return xslt;
+            }
+        }
 
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
         public float UBLVersionID { get; set; }

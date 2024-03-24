@@ -12,7 +12,7 @@ namespace ReadUbl.RIWInterface
     public interface RIW_UblItem
     {
         [XmlIgnore]
-        public string EmbededXslt { get; set; }
+        public string EmbededXslt { get; }
 
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2")]
         public float UBLVersionID { get; set; }

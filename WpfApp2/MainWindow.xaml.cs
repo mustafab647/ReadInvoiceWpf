@@ -3,7 +3,9 @@ using ReadInvoiceWpf.Forms;
 using ReadUbl.Concrete;
 using ReadUbl.Helper;
 using ReadUbl.Models;
+using ReadUbl.Models.Dispatch;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Automation;
@@ -16,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace WpfApp2
 {
@@ -46,11 +49,11 @@ namespace WpfApp2
                 Type xmlType = invoiceBussines.GetXmlModelType(ublStr);
                 if (xmlType == typeof(ReadUbl.Models.Invoice.Invoice))
                 {
-                    ublObj = invoiceBussines.ReadUblForInv(ublStr);
+                    ublObj = invoiceBussines.ReadUbl<ReadUbl.Models.Invoice.Invoice>(ublStr);
                 }
                 else if (xmlType == typeof(ReadUbl.Models.Dispatch.DespatchAdvice))
                 {
-                    ublObj = invoiceBussines.ReadUblForDespatch(ublStr);
+                    ublObj = invoiceBussines.ReadUbl<DespatchAdvice>(ublStr);
                 }
                 else if(xmlType == typeof(ReadUbl.Models.Envelope.StandardBusinessDocument))
                 {
@@ -222,6 +225,7 @@ namespace WpfApp2
         {
             var selectedItem = (ReadInvoiceWpf.Model.Invoice.InvoiceLine)invoiceLine.SelectedItem;
             SecondForm secondForm = new SecondForm();
+            secondForm.Title = "Vat Information";
             VatInf_Page vatInf_Page = new VatInf_Page(selectedItem.TaxTotal);
             secondForm.Content = vatInf_Page;
             secondForm.ShowDialog();

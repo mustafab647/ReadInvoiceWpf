@@ -21,26 +21,24 @@ namespace ReadUbl.Concrete
             if (modelType != typeof(Invoice))
                 throw new Exception($"Lütfen {modelType.Name} modeli ile çağırınız.");
             Invoice invoice = Helper.XmlHelper<Invoice>.DeSerialize(xmlStr);
-
-            string base64Xslt = invoice.AdditionalDocumentReference?.FirstOrDefault(x => x.DocumentType != null && x.DocumentType.Equals("XSLT"))?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
-            if (string.IsNullOrEmpty(base64Xslt))
-                base64Xslt = invoice.AdditionalDocumentReference?.FirstOrDefault(x => x.Attachment.EmbeddedDocumentBinaryObject.FileName.EndsWith("xslt"))?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
-            byte[] bufferXslt = System.Convert.FromBase64String(base64Xslt);
-            string xslt = System.Text.Encoding.UTF8.GetString(bufferXslt);
-            invoice.EmbededXslt = xslt;
             return invoice;
         }
 
+        public T ReadUbl<T>(string xmlStr) where T : RIW_UblItem,new()
+        {
+            Type modelType = Helper.XmlHelper<object>.AsXmlType(xmlStr);
+            if (modelType != typeof(T))
+                throw new Exception($"Lütfen {modelType.Name} modeli ile çağırınız.");
+            T despatchAdvice = Helper.XmlHelper<T>.DeSerialize(xmlStr);
+
+            return despatchAdvice;
+        }
         public DespatchAdvice ReadUblForDespatch(string xmlStr)
         {
             Type modelType = Helper.XmlHelper<object>.AsXmlType(xmlStr);
             if (modelType != typeof(DespatchAdvice))
                 throw new Exception($"Lütfen {modelType.Name} modeli ile çağırınız.");
             DespatchAdvice despatchAdvice = Helper.XmlHelper<DespatchAdvice>.DeSerialize(xmlStr);
-            string base64Xslt = despatchAdvice.AdditionalDocumentReference?.FirstOrDefault(x => x.DocumentType != null && x.DocumentType.Equals("XSLT"))?.Attachment?.EmbeddedDocumentBinaryObject.Value ?? "";
-            byte[] bufferXslt = System.Convert.FromBase64String(base64Xslt);
-            string xslt = System.Text.Encoding.UTF8.GetString(bufferXslt);
-            despatchAdvice.EmbededXslt = xslt;
 
             return despatchAdvice;
         }
