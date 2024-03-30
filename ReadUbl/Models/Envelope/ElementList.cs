@@ -11,7 +11,7 @@ namespace ReadUbl.Models.Envelope
     [XmlRoot(Namespace ="")]
     public class ElementList
     {
-        [XmlArray]
+        [XmlArray(Namespace ="")]
         public List<Invoice.Invoice> Invoice { get; set; }
         //public Invoice.Invoice Invoice { get; set; }
         [XmlArrayItem("DespatchAdvice", Namespace = "")]

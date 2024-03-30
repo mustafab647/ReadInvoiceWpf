@@ -72,5 +72,10 @@ namespace ReadUbl.Models.Dispatch
 
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
         public List<Line> DespatchLine { get; set; }
+
+        public override string ToString()
+        {
+            return $"İrsaliye: {this.ID.Value}";
+        }
     }
 }

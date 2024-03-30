@@ -24,7 +24,7 @@ namespace ReadUbl.Concrete
             return invoice;
         }
 
-        public T ReadUbl<T>(string xmlStr) where T : RIW_UblItem,new()
+        public T ReadUbl<T>(string xmlStr) where T : RIW_UblItem, new()
         {
             Type modelType = Helper.XmlHelper<object>.AsXmlType(xmlStr);
             if (modelType != typeof(T))
@@ -49,11 +49,17 @@ namespace ReadUbl.Concrete
             if (modelType != typeof(Models.Envelope.StandardBusinessDocument))
                 throw new Exception($"Lütfen {modelType.Name} modeli ile çağırınız.");
             Models.Envelope.StandardBusinessDocument result = Helper.XmlHelper<Models.Envelope.StandardBusinessDocument>.DeSerialize(xmlStr);
-            XmlNodeList xmlNodeList = xmlDoc.GetElementsByTagName("Invoice");
+            XmlNodeList xmlInvNodeList = xmlDoc.GetElementsByTagName("Invoice");
+            XmlNodeList xmlDespNodeList = xmlDoc.GetElementsByTagName("DespatchAdvice");
             ElementList elements = result.Package.Elements.ElementList;
-            foreach (XmlNode xmlNode in xmlNodeList)
+            foreach (XmlNode xmlNode in xmlInvNodeList)
             {
-                Invoice invoice = Helper.XmlHelper<Invoice>.DeSerialize(xmlNode.OuterXml);
+                Invoice invoice = ReadUbl<Invoice>(xmlNode.OuterXml);
+                elements.Invoice.Add(invoice);
+            }
+            foreach (XmlNode xmlNode in xmlDespNodeList)
+            {
+                Invoice invoice = ReadUbl<Invoice>(xmlNode.OuterXml);
                 elements.Invoice.Add(invoice);
             }
             return result;
@@ -64,9 +70,9 @@ namespace ReadUbl.Concrete
             return Helper.XmlHelper<object>.AsXmlType(xmlStr);
         }
 
-        public string InvoiceToXmlString(Invoice invoice)
+        public string InvoiceToXmlString<T>(T invoice) where T : RIW_UblItem, new()
         {
-            string result = Helper.XmlHelper<Invoice>.Serialize(invoice);
+            string result = Helper.XmlHelper<T>.Serialize(invoice);
             return result;
         }
         public string InvoiceToHtml(Invoice invoice)

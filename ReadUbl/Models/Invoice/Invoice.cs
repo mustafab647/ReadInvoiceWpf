@@ -9,7 +9,6 @@ using System.Xml.Serialization;
 
 namespace ReadUbl.Models.Invoice
 {
-    [XmlType(AnonymousType = true, Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2")]
     [XmlRoot(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2", IsNullable = false)]
 
     public class Invoice : RIW_UblItem
@@ -84,5 +83,10 @@ namespace ReadUbl.Models.Invoice
         public LegalMonetaryTotal LegalMonetaryTotal { get; set; }
         [XmlElement(Namespace = "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2")]
         public List<InvoiceLine> InvoiceLine { get; set; }
+
+        public override string ToString()
+        {
+            return $"Fatura: {this.ID.Value}";
+        }
     }
 }

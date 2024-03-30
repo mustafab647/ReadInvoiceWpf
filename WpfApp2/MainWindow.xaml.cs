@@ -4,6 +4,7 @@ using ReadUbl.Concrete;
 using ReadUbl.Helper;
 using ReadUbl.Models;
 using ReadUbl.Models.Dispatch;
+using ReadUbl.RIWInterface;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -50,36 +51,24 @@ namespace WpfApp2
                 if (xmlType == typeof(ReadUbl.Models.Invoice.Invoice))
                 {
                     ublObj = invoiceBussines.ReadUbl<ReadUbl.Models.Invoice.Invoice>(ublStr);
+                    DocList.ItemsSource = new List<ReadUbl.Models.Invoice.Invoice>() { (ReadUbl.Models.Invoice.Invoice)ublObj };
+                    setHeader(ublObj);
+                    showDoc(ublObj);
                 }
                 else if (xmlType == typeof(ReadUbl.Models.Dispatch.DespatchAdvice))
                 {
                     ublObj = invoiceBussines.ReadUbl<DespatchAdvice>(ublStr);
+                    DocList.ItemsSource = new List<ReadUbl.Models.Dispatch.DespatchAdvice>() { (ReadUbl.Models.Dispatch.DespatchAdvice)ublObj };
+                    setHeader(ublObj);
+                    showDoc(ublObj);
                 }
-                else if(xmlType == typeof(ReadUbl.Models.Envelope.StandardBusinessDocument))
+                else if (xmlType == typeof(ReadUbl.Models.Envelope.StandardBusinessDocument))
                 {
                     var envelope = invoiceBussines.GetEnvelope(ublStr);
+                    setHeader(envelope);
+                    showDoc(envelope.Package?.Elements?.ElementList?.Invoice?.FirstOrDefault());
                 }
 
-                UblText.Text = ublStr;
-                XsltText.Text = ublObj.EmbededXslt;
-                string html = string.Empty;
-                if (ublObj is ReadUbl.Models.Invoice.Invoice)
-                {
-                    var invoiceModel = ReadInvoiceWpf.Helper.ConvertInvoice.ToInvoiceModel((ReadUbl.Models.Invoice.Invoice)ublObj);
-                    setDetail(invoiceModel);
-                }
-                else if(ublObj is ReadUbl.Models.Dispatch.DespatchAdvice)
-                {
-                    var dispatchModel = ReadInvoiceWpf.Helper.ConvertDespatch.ToDespatchModel((ReadUbl.Models.Dispatch.DespatchAdvice)ublObj);
-                    setDetail(dispatchModel);
-                }
-                //editControl.Text = ublStr;
-                try
-                {
-                    html = invoiceBussines.ToHtml(ublStr, XsltText.Text);
-                }
-                catch { }
-                setWebViewHtml(html);
             }
         }
 
@@ -95,6 +84,74 @@ namespace WpfApp2
             }
             catch { }
             setWebViewHtml(html);
+        }
+        private void showDoc(ReadUbl.RIWInterface.RIW_UblItem ublItem)
+        {
+            ReadUbl.Concrete.InvoiceBussines invoiceBussines = new InvoiceBussines();
+            string ublStr = "";
+            if (ublItem is ReadUbl.Models.Invoice.Invoice)
+                ublStr = invoiceBussines.InvoiceToXmlString((ReadUbl.Models.Invoice.Invoice)ublItem);
+            else if (ublItem is ReadUbl.Models.Dispatch.DespatchAdvice)
+                ublStr = invoiceBussines.InvoiceToXmlString((ReadUbl.Models.Dispatch.DespatchAdvice)ublItem);
+            UblText.Text = ublStr;
+            XsltText.Text = ublItem.EmbededXslt;
+            string html = string.Empty;
+            if (ublItem is ReadUbl.Models.Invoice.Invoice)
+            {
+                var invoiceModel = ReadInvoiceWpf.Helper.ConvertInvoice.ToInvoiceModel((ReadUbl.Models.Invoice.Invoice)ublItem);
+                setDetail(invoiceModel);
+            }
+            else if (ublItem is ReadUbl.Models.Dispatch.DespatchAdvice)
+            {
+                var dispatchModel = ReadInvoiceWpf.Helper.ConvertDespatch.ToDespatchModel((ReadUbl.Models.Dispatch.DespatchAdvice)ublItem);
+                setDetail(dispatchModel);
+            }
+            //editControl.Text = ublStr;
+            try
+            {
+                html = invoiceBussines.ToHtml(ublStr, XsltText.Text);
+            }
+            catch { }
+            setWebViewHtml(html);
+        }
+        private void setHeader(object doc)
+        {
+            if (doc is ReadUbl.Models.Envelope.StandardBusinessDocument)
+            {
+                ReadUbl.Models.Envelope.StandardBusinessDocument envelope = (ReadUbl.Models.Envelope.StandardBusinessDocument)doc;
+                SenderEmail.Text = envelope.Header.Sender.Identifier;
+                SenderTitle.Text = envelope.Header.Sender.ContactInformation.FirstOrDefault(x => x.ContactTypeIdentifier == "UNVAN")?.Contact;
+                SenderIdentifier.Text = envelope.Header.Sender.ContactInformation.FirstOrDefault(x => x.ContactTypeIdentifier == "VKN_TCKN")?.Contact;
+
+                ReceiverEmail.Text = envelope.Header.Receiver.Identifier;
+                ReceiverTitle.Text = envelope.Header.Receiver.ContactInformation.FirstOrDefault(x => x.ContactTypeIdentifier == "UNVAN")?.Contact;
+                ReceiverIdentifier.Text = envelope.Header.Receiver.ContactInformation.FirstOrDefault(x => x.ContactTypeIdentifier == "VKN_TCKN")?.Contact;
+                if (envelope.Package?.Elements?.ElementList?.Invoice?.Count > 0)
+                    DocList.ItemsSource = envelope.Package?.Elements?.ElementList?.Invoice;
+            }
+            else if (doc is ReadUbl.Models.Invoice.Invoice)
+            {
+                ReadUbl.Models.Invoice.Invoice invoice = (ReadUbl.Models.Invoice.Invoice)doc;
+                SenderEmail.Text = invoice.AccountingSupplierParty?.Party?.Contact?.ElectronicMail ?? "";
+                SenderTitle.Text = invoice.AccountingSupplierParty?.Party?.PartyName?.Name ?? "";
+                SenderIdentifier.Text = invoice.AccountingSupplierParty?.Party?.PartyIdentification?.FirstOrDefault(x => x.ID.schemeID == "VKN")?.ID?.Value ?? "";
+
+                ReceiverEmail.Text = invoice.AccountingCustomerParty?.Party?.Contact?.ElectronicMail ?? "";
+                ReceiverTitle.Text = invoice.AccountingCustomerParty?.Party?.PartyName?.Name ?? "";
+                ReceiverIdentifier.Text = invoice.AccountingCustomerParty?.Party?.PartyIdentification?.FirstOrDefault(x => x.ID.schemeID == "VKN")?.ID?.Value ?? "";
+            }
+            else if (doc is DespatchAdvice)
+            {
+                ReadUbl.Models.Dispatch.DespatchAdvice despatch = (ReadUbl.Models.Dispatch.DespatchAdvice)doc;
+                SenderEmail.Text = despatch.AccountingSupplierParty?.Party?.Contact?.ElectronicMail ?? "";
+                SenderTitle.Text = despatch.AccountingSupplierParty?.Party?.PartyName?.Name ?? "";
+                SenderIdentifier.Text = despatch.AccountingSupplierParty?.Party?.PartyIdentification?.FirstOrDefault(x => x.ID.schemeID == "VKN")?.ID?.Value ?? "";
+
+                ReceiverEmail.Text = despatch.AccountingCustomerParty?.Party?.Contact?.ElectronicMail ?? "";
+                ReceiverTitle.Text = despatch.AccountingCustomerParty?.Party?.PartyName?.Name ?? "";
+                ReceiverIdentifier.Text = despatch.AccountingCustomerParty?.Party?.PartyIdentification?.FirstOrDefault(x => x.ID.schemeID == "VKN")?.ID?.Value ?? "";
+            }
+
         }
         private void setDetail(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
@@ -117,10 +174,14 @@ namespace WpfApp2
         }
         private void setSubTotal(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
-            GrandTotalExclVatTxt.Text = invoice.TaxExclAmount.ToString();
-            DiscExclVatTxt.Text = invoice.ChargeAmount.ToString();
-            VatTxt.Text = invoice.VatInclAmount.ToString();
-            TotalText.Text = invoice.TaxInclAmount.ToString();
+            if (invoice.TaxExclAmount?.Amount > 0)
+                GrandTotalExclVatTxt.Text = invoice.TaxExclAmount.ToString();
+            if (invoice.ChargeAmount?.Amount > 0)
+                DiscExclVatTxt.Text = invoice.ChargeAmount.ToString();
+            if (invoice.VatInclAmount?.Amount > 0)
+                VatTxt.Text = invoice.VatInclAmount.ToString();
+            if (invoice.TaxInclAmount?.Amount > 0)
+                TotalText.Text = invoice.TaxInclAmount.ToString();
         }
         private void setSupplierInf(ReadInvoiceWpf.Model.Invoice.Invoice invoice)
         {
@@ -230,6 +291,18 @@ namespace WpfApp2
             secondForm.Content = vatInf_Page;
             secondForm.ShowDialog();
         }
+
+        private void resetHeader()
+        {
+            SenderEmail.Text = "";
+            SenderTitle.Text = "";
+            SenderIdentifier.Text = "";
+
+            ReceiverEmail.Text = "";
+            ReceiverTitle.Text = "";
+            ReceiverIdentifier.Text = "";
+            DocList.ItemsSource = null;
+        }
         private void resetDataGrid()
         {
             invoiceLine.ItemsSource = null;
@@ -267,10 +340,20 @@ namespace WpfApp2
         }
         private void allReset()
         {
+            resetHeader();
             resetSupplierInf();
             resetCustomerInf();
             resetDataGrid();
             resetSubTotal();
+        }
+
+        private void DocList_Selected(object sender, RoutedEventArgs e)
+        {
+            var selected = (System.Windows.Controls.SelectionChangedEventArgs)e;
+            if (selected.AddedItems.Count == 0)
+                return;
+            RIW_UblItem ublItem = (RIW_UblItem)selected.AddedItems[0];
+            showDoc(ublItem);
         }
     }
 }

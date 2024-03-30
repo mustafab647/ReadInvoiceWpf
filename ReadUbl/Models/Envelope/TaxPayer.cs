@@ -12,6 +12,6 @@ namespace ReadUbl.Models.Envelope
         [XmlElement(Namespace = "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader")]
         public string Identifier { get; set; }
         [XmlElement(Namespace = "http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader")]
-        public ContactInformation ContactInformation { get; set; }
+        public List<ContactInformation> ContactInformation { get; set; }
     }
 }

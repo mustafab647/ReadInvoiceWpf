@@ -11,10 +11,23 @@
         <TabControl>
             <TabItem x:Name="Invoice" Header="Fatura">
                 <Grid>
-                    <Button  Content="Dosya Aç" VerticalAlignment="Top" HorizontalAlignment="Right" Click="OpenFile_Click" RenderTransformOrigin="7.475,-2.829" Margin="0,18,10,0" Width="68"/>
-                    <TextBox x:Name="FilePath"  Margin="105,20,93,0" TextWrapping="Wrap" IsReadOnly="True" Text="FilePath" VerticalAlignment="Top" InputScope="FileName"/>
                     <Label Content="Dosya Yolu" HorizontalAlignment="Left" Margin="18,18,0,0" VerticalAlignment="Top"/>
-                    <Grid Background="Black" Margin="0,100,0,0">
+                    <TextBox x:Name="FilePath"  Margin="105,20,93,0" TextWrapping="Wrap" IsReadOnly="True" Text="FilePath" VerticalAlignment="Top" InputScope="FileName"/>
+                    <Button  Content="Dosya Aç" VerticalAlignment="Top" HorizontalAlignment="Right" Click="OpenFile_Click" RenderTransformOrigin="7.475,-2.829" Margin="0,18,10,0" Width="68"/>
+                    <Label Margin="18,50,0,0" Height="24" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Gönderici E-Posta" />
+                    <TextBox x:Name="SenderEmail" Margin="138,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" Width="250" IsReadOnly="True" />
+                    <Label Margin="18,70,0,0" Height="24" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Gönderici Unvanı" />
+                    <TextBox x:Name="SenderTitle" Margin="138,70,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" Width="250" IsReadOnly="True" />
+                    <Label Margin="18,90,0,0" Height="24" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Gönderici Unvanı" />
+                    <TextBox x:Name="SenderIdentifier" Margin="138,90,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" Width="250" IsReadOnly="True" />
+                    <Label Margin="400,50,0,0" Height="24" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Gönderici E-Posta" />
+                    <TextBox x:Name="ReceiverEmail" Margin="530,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" Width="250" IsReadOnly="True" />
+                    <Label Margin="400,70,0,0" Height="24" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Gönderici Unvanı" />
+                    <TextBox x:Name="ReceiverTitle" Margin="530,70,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" Width="250" IsReadOnly="True" />
+                    <Label Margin="400,90,0,0" Height="24" Width="110" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Gönderici Unvanı" />
+                    <TextBox x:Name="ReceiverIdentifier" Margin="530,90,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" Width="250" IsReadOnly="True" />
+                    <ComboBox x:Name="DocList" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="138,120,0,0" Width="700" Height="25" SelectionChanged="DocList_Selected" ></ComboBox>
+                    <Grid Background="Black" Margin="0,180,0,0">
                         <ContentControl Background="AliceBlue" Visibility="Collapsed" Content="3r34feawfwafwafwafaw243wq" FontSize="100" />
                         <TabControl>
                             <TabItem Header="Invoice">
@@ -207,8 +220,6 @@
                         </TabControl>
                     </Grid>
                 </Grid>
-            </TabItem>
-            <TabItem x:Name="Envelope" Header="Zarf">
             </TabItem>
         </TabControl>
     </Grid>
