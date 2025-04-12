@@ -20,6 +20,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
+using WPFLocalizeExtension.Engine;
 
 namespace WpfApp2
 {
@@ -34,8 +35,32 @@ namespace WpfApp2
         {
             InitializeComponent();
             WebInvoiceInitialize();
+            LanguageMenu();
         }
 
+        private void LanguageMenu()
+        {
+            // Create a menu for language selection
+
+            MenuItem englishMenuItem = new MenuItem { Header = "English" };
+            MenuItem spanishMenuItem = new MenuItem { Header = "Türkçe" };
+            // Add event handlers for language selection
+
+            englishMenuItem.Click += (s, e) => ChangeLanguage("en-Us");
+            spanishMenuItem.Click += (s, e) => ChangeLanguage("tr-TR");
+            // Add the menu items to the language menu
+            SelectLanguage.Items.Clear();
+            //LanguageMenuTest.Items.Add(new MenuItem { Header = "Select Language" });
+            SelectLanguage.Items.Add(englishMenuItem);
+            SelectLanguage.Items.Add(spanishMenuItem);
+            // Add the language menu to the window
+            //this.Content = LanguageMenuTest;
+        }
+
+        private void ChangeLanguage(string v)
+        {
+            LocalizeDictionary.Instance.Culture = new System.Globalization.CultureInfo(v);
+        }
         private bool isCompleteWebCore { get; set; } = false;
         private bool isInitializeWebCore { get; set; } = false;
         private void OpenFile_Click(object sender, RoutedEventArgs e)
@@ -179,7 +204,7 @@ namespace WpfApp2
             if (invoice.ChargeAmount?.Amount > 0)
                 DiscExclVatTxt.Text = invoice.ChargeAmount.ToString();
             if (invoice.VatInclAmount?.Amount > 0)
-                VatTxt.Text = invoice.VatInclAmount.ToString();
+                VatTxt.Text = (invoice.VatInclAmount - invoice.TaxExclAmount).ToString();
             if (invoice.TaxInclAmount?.Amount > 0)
                 TotalText.Text = invoice.TaxInclAmount.ToString();
         }

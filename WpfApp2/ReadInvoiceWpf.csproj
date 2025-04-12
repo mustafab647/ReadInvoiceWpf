@@ -10,11 +10,27 @@
 
   <ItemGroup>
     <PackageReference Include="Syncfusion.Edit.WPF" Version="24.2.8" />
+    <PackageReference Include="WPFLocalizeExtension" Version="3.10.0" />
     <PackageReference Include="WpfRichText" Version="1.0.16.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ReadUbl\ReadUbl.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
